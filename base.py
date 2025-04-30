@@ -8,4 +8,12 @@ class RowMeta(type):
             items = dict((k,v) for (k,v) in items if not k.startswith('__'))
         else:
             items = {}
-            dialect = options.Dialect(**items)
+        cls._dialect = options.Dialect(**items)
+
+        for key,attr in attrs.items():
+            if hasattr(attr,'attach_to_class'):
+                attr.attach_to_class(cls,key,cls._dialect)
+
+
+class Row(metaclass=RowMeta):
+    pass
